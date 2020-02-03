@@ -1,14 +1,10 @@
-[![Build Status](https://travis-ci.com/FreekMencke/node-typescript-starter.svg?branch=master)](https://travis-ci.com/FreekMencke/node-typescript-starter)
-[![GitHub issues](https://img.shields.io/github/issues/FreekMencke/node-typescript-starter.svg)](https://github.com/FreekMencke/node-typescript-starter/issues)
-[![GitHub license](https://img.shields.io/github/license/FreekMencke/node-typescript-starter.svg)](https://github.com/FreekMencke/node-typescript-starter/blob/master/LICENSE)
-
 # Node TypeScript Starter
 
 Since I make a lot of projects, I created this **Node TypeScript Starter** to easily create a new Node project with TypeScript.
 
 ## Getting started
 
-- `git clone https://github.com/FreekMencke/node-typescript-starter.git`
+- `git clone https://github.com/ezhuo/node-typescript-starter.git`
 - `npm install`
 - `npm start`
 

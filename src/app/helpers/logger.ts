@@ -14,7 +14,7 @@ export class Logger {
       minute: '2-digit',
       second: '2-digit',
       hour12: false,
-      timeZone: 'UTC',
+      timeZone: 'PRC'
     };
 
     const date = new Date();

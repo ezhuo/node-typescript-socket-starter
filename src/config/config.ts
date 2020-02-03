@@ -1,8 +1,14 @@
 import { IConfig } from './config.interface';
-import { globalConfig } from './config.global';
+import { globalConfig, IGlobalSocketFormat } from './config.global';
 
 export const config: IConfig = {
   ...globalConfig,
 
-  apiUrl: 'http://a-production-url',
+  apiUrl: 'http://a-production-url'
+};
+
+export const globalSocketFormat: IGlobalSocketFormat = {
+  start: '',
+  separator: '',
+  end: ''
 };

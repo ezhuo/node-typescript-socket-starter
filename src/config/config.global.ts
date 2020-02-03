@@ -3,5 +3,11 @@ export interface IGlobalConfig {
 }
 
 export const globalConfig: IGlobalConfig = {
-  sharedConfigSetting: 'this is a shared setting',
+  sharedConfigSetting: 'this is a shared setting'
 };
+
+export interface IGlobalSocketFormat {
+  start: any;
+  separator: any;
+  end: any;
+}

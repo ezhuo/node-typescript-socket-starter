@@ -1,5 +1,5 @@
 import { config } from '../config/config';
-import { Logger } from './common/logger';
+import { Logger } from './helpers/logger';
 
 export class App {
   static run(): App {
@@ -16,7 +16,7 @@ export class App {
     Logger.logTask('APP', {
       develop: DEVELOP,
       version: VERSION,
-      config: config,
+      config: config
     });
   }
 }
