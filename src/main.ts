@@ -1,8 +1,8 @@
 import { App } from './app/app';
-import { Logger } from './app/common/logger';
+import { Logger } from './app/helpers/logger';
 
-Logger.logTask('SYSTEM', 'STARTING');
+Logger.logTask('system', 'STARTING');
 
 App.run();
 
-Logger.logTask('SYSTEM', 'FINISHED');
+Logger.logTask('system', 'FINISHED');

@@ -1,4 +1,6 @@
-import * as crcItu from 'crc-itu';
+import { globalSocketFormat } from '../model';
+
+// import * as crcItu from 'crc-itu';
 
 export class Helpers {
   static rad(x: any): number {
@@ -54,13 +56,12 @@ export class Helpers {
     return data;
   }
   static send_to(socket: any, cmd: any, data: any): void {
-    let gps_format: string = '';
     if (typeof socket.device_id == 'undefined')
       throw 'The socket is not paired with a device_id yet';
-    let str = gps_format.start;
-    str += socket.device_id + gps_format.separator + cmd;
-    if (typeof data != 'undefined') str += gps_format.separator + data;
-    str += gps_format.end;
+    let str = globalSocketFormat.start;
+    str += socket.device_id + globalSocketFormat.separator + cmd;
+    if (typeof data != 'undefined') str += globalSocketFormat.separator + data;
+    str += globalSocketFormat.end;
     this.send(socket, str);
     //Example: (<DEVICE_ID>|<CMD>|<DATA>) - separator: | ,start: (, end: )
   }
@@ -102,7 +103,7 @@ export class Helpers {
       char = null;
       if (typeof hex_array[i] === 'number') char = hex_array[i].toString(16);
       else char = hex_array[i].toString();
-      str += exports.str_pad(char, 2, '0');
+      str += this.str_pad(char, 2, '0');
     }
     return str;
   }
@@ -114,10 +115,30 @@ export class Helpers {
       : new Array(length - input.length + 1).join(string) + input;
   }
   static crc_itu_get_verification(hex_data: any): any {
-    const crc16 = crcItu.crc16;
-    let str = null;
-    if (typeof hex_data === 'String') str = hex_data;
-    else str = exports.hex_array_to_hex_str(hex_data);
-    return crc16(str, 'hex');
+    return null;
+    // const crc16 = crcItu.crc16;
+    // let str = null;
+    // if (typeof hex_data === 'string') str = hex_data;
+    // else str = this.hex_array_to_hex_str(hex_data);
+    // return crc16(str, 'hex');
+  }
+
+  static bufferToHexString(buffer: any): string {
+    let str = '';
+    for (let i = 0; i < buffer.length; i++) {
+      if (buffer[i] < 16) {
+        str += '0';
+      }
+      str += buffer[i].toString(16);
+    }
+    return str;
+  }
+
+  static zeroPad(nNum: any, nPad: any): any {
+    return ('' + (Math.pow(10, nPad) + nNum)).slice(1);
+  }
+
+  static dexToDegrees(dex: any): any {
+    return parseInt(dex, 16) / 1800000;
   }
 }
