@@ -7,6 +7,7 @@ const NodemonPlugin = require('nodemon-webpack-plugin');
 const packageJson = require('./package.json');
 
 module.exports = (env = {}) => {
+  console.log(env);
   const config = {
     entry: ['./src/main.ts'],
     mode: env.development ? 'development' : 'production',
@@ -15,39 +16,39 @@ module.exports = (env = {}) => {
     devtool: env.development ? 'inline-source-map' : false,
     node: {
       __dirname: false, // Fix for native node __dirname
-      __filename: false, // Fix for native node __filename
+      __filename: false // Fix for native node __filename
     },
     output: {
-      filename: `${packageJson.name}.js`,
+      filename: `${packageJson.name}.js`
     },
     resolve: {
       extensions: ['.ts', '.js'],
-      modules: ['node_modules', 'src'],
+      modules: ['node_modules', 'src']
     },
     stats: {
-      modules: false, // We don't need to see this
+      modules: false // We don't need to see this
     },
     module: {
       rules: [
         {
           test: /\.ts$/,
           use: 'ts-loader',
-          exclude: /node_modules/,
-        },
-      ],
+          exclude: /node_modules/
+        }
+      ]
     },
     plugins: [
       new CleanWebpackPlugin(),
       new DefinePlugin({
         VERSION: JSON.stringify(packageJson.version),
-        DEVELOP: env.development,
+        DEVELOP: env.development
       }),
       // Use module replacement to use different configs for dev and prod
       new NormalModuleReplacementPlugin(
-        /[\\/]src[\\/]config[\\/]config.ts$/, // [\\/] works on all operating systems.
-        env.development ? 'config.dev.ts' : 'config.ts'
-      ),
-    ],
+        /[\\/]src[\\/]config[\\/]environment.prod.ts$/, // [\\/] works on all operating systems.
+        env.development ? 'environment.dev.ts' : 'environment.prod.ts'
+      )
+    ]
   };
 
   if (env.nodemon) {
@@ -58,7 +59,7 @@ module.exports = (env = {}) => {
   if (env.analyse) {
     config.plugins.push(
       new BundleAnalyzerPlugin({
-        analyzerMode: 'static', // Generates file instead of starting a web server
+        analyzerMode: 'static' // Generates file instead of starting a web server
       })
     );
   }

@@ -1,10 +1,11 @@
 import { Logger } from './../../helpers/logger';
 import { EventEmitter } from 'events';
-import { IAdapter, IDeviceInfo } from '../../model';
+import { IAdapter, IDeviceInfo, IAddressInfo } from '../../model';
 
 export class DeviceBase extends EventEmitter {
   __adapter: IAdapter;
-  __ip: string | undefined = '';
+
+  __addressInfo: IAddressInfo;
 
   __deviceInfo: IDeviceInfo = {
     deviceId: 0,
@@ -22,63 +23,28 @@ export class DeviceBase extends EventEmitter {
     this.__deviceInfo = value;
   }
 
+  // tslint:disable-next-line: typedef
+  get addressInfo() {
+    return this.__addressInfo;
+  }
+
+  set addressInfo(value: IAddressInfo) {
+    this.__addressInfo = value;
+  }
+
   constructor(_adapter: any) {
     super();
     this.__adapter = _adapter['_new'](this);
-    this.on('data', this.onData);
+    this.__addressInfo = { ip: 'localhost', port: 0 };
     this.on('connected', this.connected);
     this.on('disconnected', this.disconnected);
   }
 
-  onData(data: any): void {
-    const msgParts = this.__adapter.parseData(data);
-    Logger.log('-----------------', msgParts, '-----------------');
+  onData(data: any): void {}
 
-    if (msgParts === false) {
-      //something bad happened
-      Logger.log('The message (' + data + ") can't be parsed. Discarding...");
-      return;
-    }
+  onlistening(): void {}
 
-    if (typeof msgParts.cmd === 'undefined') {
-      // throw 'The adapter doesn\'t return the command (cmd) parameter';
-    }
-
-    //If the UID of the devices it hasn't been setted, do it now.
-    if (this.deviceInfo.deviceId === 0) {
-      this.deviceInfo.deviceId = msgParts.device_id;
-    }
-
-    this.makeAction(msgParts.action, msgParts);
-  }
-
-  makeAction(action: any, msgParts: any): void {
-    if (action !== 'loginRequest') {
-      this.__adapter.requestLoginToDevice();
-      Logger.log(
-        this.deviceInfo.deviceId +
-          " is trying to '" +
-          action +
-          "' but it isn't loged. Action wasn't executed"
-      );
-      return;
-    }
-
-    switch (action) {
-      case 'loginRequest':
-        this.loginRequest(msgParts);
-        break;
-      case 'ping':
-        this.ping(msgParts);
-        break;
-      case 'alarm':
-        this.onAlarm(msgParts);
-        break;
-      case 'other':
-        this.__adapter.parseDefault(msgParts.cmd, msgParts);
-        break;
-    }
-  }
+  makeAction(action: any, msgParts: any): void {}
 
   loginRequest(msgParts: any): void {
     Logger.log("I'm requesting to be loged.");
@@ -137,10 +103,16 @@ export class DeviceBase extends EventEmitter {
   send(msg: any): void {}
 
   connected(): void {
-    Logger.logTask('device.connected', `${this.__ip} 设备上线！`);
+    Logger.logTask(
+      'device.connected',
+      `${this.addressInfo.ip || ''} 设备上线！`
+    );
   }
 
   disconnected(): void {
-    Logger.logTask('device.disconnected', `${this.__ip} 设备下线！`);
+    Logger.logTask(
+      'device.disconnected',
+      `${this.addressInfo.ip || ''} 设备下线！`
+    );
   }
 }

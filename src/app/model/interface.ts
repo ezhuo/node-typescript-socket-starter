@@ -8,9 +8,15 @@ export interface IGlobalSocketFormat {
 
 export interface ISocketOptions {
   protocol: 'TCP' | 'UDP' | 'TWO';
+  timeOut: number;
   tcpPort: number;
   udpPort: number;
   device_adapter: any;
+}
+
+export interface IAddressInfo {
+  ip: string;
+  port: number;
 }
 
 export interface IDeviceInfo {
@@ -21,9 +27,12 @@ export interface IDeviceInfo {
 }
 
 export interface IDevice extends EventEmitter {
+  socket: any;
   deviceInfo: IDeviceInfo;
+  addressInfo: IAddressInfo;
   onData(data: any): void;
   onAlarm(msgParts: any): void;
+  onlistening(): void;
   makeAction(action: any, msgParts: any): void;
   loginRequest(msgParts: any): void;
   loginAuthorized(val: any, msgParts: any): void;

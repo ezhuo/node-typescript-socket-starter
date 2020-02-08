@@ -10,3 +10,12 @@ export const globalSocketFormat: IGlobalSocketFormat = {
 export const __adaptersList__: any = {
   BYT: BYTAdapter
 };
+
+let _env: any = {};
+if (!DEVELOP) {
+  _env = require('../../config/environment.prod');
+} else {
+  _env = require('../../config/environment.dev');
+}
+
+export const env = _env;

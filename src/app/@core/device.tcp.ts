@@ -8,14 +8,17 @@ export class DeviceTcp extends DeviceBase implements IDevice {
   __socket: net.Socket;
   __server: SocketTcpServer;
 
+  // tslint:disable-next-line: typedef
+  get socket(): net.Socket {
+    return this.__socket;
+  }
+
   constructor(_adapter: any, _socket: net.Socket, _server: SocketTcpServer) {
     super(_adapter);
     this.__socket = _socket;
     this.__server = _server;
-    this.__ip = _socket.remoteAddress;
+    if (_socket.remoteAddress) this.addressInfo.ip = _socket.remoteAddress;
     this.on('data', this.onData);
-    this.on('connected', this.connected);
-    this.on('disconnected', this.disconnected);
   }
 
   onData(data: any): void {
@@ -69,27 +72,6 @@ export class DeviceTcp extends DeviceBase implements IDevice {
       case 'other':
         this.__adapter.parseDefault(msgParts.cmd, msgParts);
         break;
-    }
-  }
-
-  loginRequest(msgParts: any): void {
-    Logger.log("I'm requesting to be loged.");
-    this.emit('loginRequest', this.deviceInfo.deviceId, msgParts);
-  }
-
-  loginAuthorized(val: any, msgParts: any = true): void {
-    if (val) {
-      Logger.log(
-        'Device ' + this.deviceInfo.deviceId + ' has been authorized. Welcome!'
-      );
-
-      this.__adapter.authorize(msgParts);
-    } else {
-      Logger.log(
-        'Device ' +
-          this.deviceInfo.deviceId +
-          ' not authorized. Login request rejected'
-      );
     }
   }
 
